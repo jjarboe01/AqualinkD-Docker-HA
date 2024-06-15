@@ -1,0 +1,15 @@
+name: "AqualinkD"
+description: "This connects to Jandy AquaLink systems using a serial to ip gateway."
+version: "2.3.7"
+slug: "aqualinkd"
+init: false
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386
+url: https://github.com/sfeakes/AqualinkD
+startup: application
+panel_icon: mdi:pool
+boot: auto
