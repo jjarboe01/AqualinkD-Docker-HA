@@ -1,6 +1,6 @@
 name: "AqualinkD"
 description: "This connects to Jandy AquaLink systems using a serial to ip gateway."
-version: "2.3.7"
+version: "2.6.9"
 slug: "aqualinkd"
 init: false
 arch:
