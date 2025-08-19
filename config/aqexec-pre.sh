@@ -10,6 +10,6 @@
 #
 
 echo "Starting SOCAT port binding....."
-socat -d -d pty,link=/aquadconf/tty.Pool,raw TCP:192.168.99.248:8899 &
+socat -d -d pty,link=/aquadconf/tty.Pool,raw,ignoreeof TCP:192.168.99.248:8899,ignoreeof &
 echo "Sleeping for SOCAT start....."
-sleep 10s
+sleep 2s
