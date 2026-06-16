@@ -1,0 +1,48 @@
+# The following assumes you are publishing to root aqualinkd in MQTT.  Use MQTT Explorer to see all the values published, I wanted to get these values that the iAquaLink app does not expose natively
+
+mqtt:  
+  sensor:
+    - name: AquaLinkD Status
+      unique_id: aqualinkd_status
+      state_topic: "aqualinkd/Alive"
+      value_template: "{{ value }}"
+      icon: mdi:wrench  
+    - name: Salt Boost
+      unique_id: aqualinkd_swg_boost
+      state_topic: "aqualinkd/SWG/Boost"
+      value_template: "{{ value }}"
+      icon: mdi:wrench      
+    - name: Salt Cell Status
+      unique_id: aqualink_swg_message
+      state_topic: "aqualinkd/SWG/Display_Message"
+      value_template: "{{ value }}"
+      icon: mdi:wrench
+    - name: Salt PPM
+      unique_id: aqualink_swg_ppm
+      state_topic: "aqualinkd/SWG/PPM"
+      value_template: "{{ value }}"
+      icon: mdi:wrench
+      unit_of_measurement: "ppm"
+    - name: Salt Generation Percent
+      unique_id: aqualink_swg_percent
+      state_topic: "aqualinkd/SWG/Percent"
+      value_template: "{{ value }}"
+      icon: mdi:wrench
+      unit_of_measurement: "%"
+    - name: Pool Pump RPM
+      unique_id: aqualink_pump_rpm
+      state_topic: "aqualinkd/Filter_Pump/RPM"
+      value_template: "{{ value }}"
+      icon: mdi:wrench
+      unit_of_measurement: "rpm"
+    - name: Pool Pump Watts
+      unique_id: aqualink_pump_watts
+      state_topic: "aqualinkd/Filter_Pump/Watts"
+      value_template: "{{ value }}"
+      icon: mdi:wrench
+      unit_of_measurement: "watts"
+    - name: AquaLinkD Display Message
+      unique_id: aqualinkd_display_message
+      state_topic: "aqualinkd/Display_Message"
+      value_template: "{{ value }}"
+      icon: mdi:wrench
