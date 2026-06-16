@@ -152,5 +152,5 @@ ha addons start local_aqualinkd
 
 ## Credits
 
-- [sfeakes/AqualinkD](https://github.com/sfeakes/AqualinkD) — the underlying daemon
+- [aqualinkd/AqualinkD](https://github.com/aqualinkd/AqualinkD) — the underlying daemon
 - EW-11 RS485-over-WiFi adapter by Hi-Flying

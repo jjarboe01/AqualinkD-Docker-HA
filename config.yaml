@@ -9,7 +9,7 @@ arch:
   - armhf
   - armv7
   - i386
-url: https://github.com/sfeakes/AqualinkD
+url: https://github.com/aqualinkd/AqualinkD
 startup: application
 panel_icon: mdi:pool
 boot: auto
