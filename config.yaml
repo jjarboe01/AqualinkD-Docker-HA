@@ -1,0 +1,123 @@
+name: "AqualinkD"
+description: "This connects to Jandy AquaLink systems using a serial to ip gateway."
+version: "3.1.0"
+slug: "aqualinkd"
+init: false
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386
+url: https://github.com/sfeakes/AqualinkD
+startup: application
+panel_icon: mdi:pool
+boot: auto
+watchdog: http://[HOST]:80/
+ports:
+  80/tcp: 7243
+ports_description:
+  80/tcp: AqualinkD Web UI
+
+options:
+  # EW-11 WiFi RS485 adapter
+  ew11_host: "192.168.99.248"
+  ew11_port: 8899
+  # MQTT broker
+  mqtt_host: "192.168.1.75"
+  mqtt_port: 1883
+  mqtt_user: "mqtt"
+  mqtt_password: ""
+  mqtt_topic: "aqualinkd"
+  mqtt_timed_update: false
+  # Panel settings
+  panel_type: "RS-4 Only"
+  device_id: "0x09"
+  rssa_device_id: "0x48"
+  extended_device_id: "0x30"
+  extended_device_id_programming: true
+  # Logging
+  log_level: "INFO"
+  display_warnings_in_web: false
+  # RS485 device reading
+  read_rs485_swg: true
+  read_rs485_epump: true
+  read_rs485_vsfpump: false
+  read_rs485_jxi: false
+  read_rs485_lx: false
+  read_rs485_chem: false
+  # Temperature & time
+  convert_mqtt_temp_to_c: false
+  keep_paneltime_synced: false
+  # Pool/Spa reporting
+  report_zero_spa_temp: true
+  report_zero_pool_temp: false
+  override_freeze_protect: false
+  # Force detection on startup
+  force_swg: true
+  force_ps_setpoints: true
+  force_frzprotect_setpoints: true
+  force_chem_feeder: false
+  # SWG
+  swg_zero_ignore_count: 20
+  # Light programming
+  light_programming_mode: 0
+  light_programming_initial_on: 15
+  light_programming_initial_off: 12
+  # Misc hardware
+  rs485_frame_delay: 1
+  ftdi_low_latency: false
+  enable_scheduler: false
+  # Buttons
+  buttons:
+    - label: "Filter Pump"
+      pump_id: "0x78"
+      pump_index: 1
+    - label: "Pool Light"
+      light_mode: 2
+    - label: "High Speed"
+    - label: "NONE"
+
+schema:
+  ew11_host: str
+  ew11_port: int
+  mqtt_host: str
+  mqtt_port: int
+  mqtt_user: str
+  mqtt_password: str
+  mqtt_topic: str
+  mqtt_timed_update: bool
+  panel_type: str
+  device_id: str
+  rssa_device_id: str
+  extended_device_id: str
+  extended_device_id_programming: bool
+  log_level: str
+  display_warnings_in_web: bool
+  read_rs485_swg: bool
+  read_rs485_epump: bool
+  read_rs485_vsfpump: bool
+  read_rs485_jxi: bool
+  read_rs485_lx: bool
+  read_rs485_chem: bool
+  convert_mqtt_temp_to_c: bool
+  keep_paneltime_synced: bool
+  report_zero_spa_temp: bool
+  report_zero_pool_temp: bool
+  override_freeze_protect: bool
+  force_swg: bool
+  force_ps_setpoints: bool
+  force_frzprotect_setpoints: bool
+  force_chem_feeder: bool
+  swg_zero_ignore_count: int
+  light_programming_mode: int
+  light_programming_initial_on: int
+  light_programming_initial_off: int
+  rs485_frame_delay: int
+  ftdi_low_latency: bool
+  enable_scheduler: bool
+  buttons:
+    - label: str
+      pump_id: str?
+      pump_index: int?
+      light_mode: int?

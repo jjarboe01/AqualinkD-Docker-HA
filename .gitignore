@@ -1,0 +1,8 @@
+# Ignore backup files
+*.bak
+
+# Ignore any local credential overrides
+config/aqualinkd.conf.local
+
+# macOS
+.DS_Store
