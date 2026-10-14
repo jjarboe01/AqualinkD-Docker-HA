@@ -118,11 +118,21 @@ The AqualinkD web UI is available at `http://<ha-ip>:7243` and will also appear 
 On each container start, `aqualinkd-ts.sh` runs, which:
 
 1. Copies the pre-exec script from the image layer into `/aquadconf/` (so config changes always take effect on restart)
-2. Reads `/data/options.json` (HA's add-on config store) and applies all settings to `aqualinkd.conf` via `sed`
+2. Reads `/data/options.json` (HA's add-on config store), validates it, and **regenerates** `aqualinkd.conf` from an immutable baked-in template. The new file is written to a temp file and moved into place atomically — if options are missing or invalid, the daemon aborts and the previous working config is left untouched.
 3. Starts a `socat` reconnect loop bridging the EW-11 TCP connection to a virtual serial port (`/aquadconf/tty.Pool`)
 4. Launches `aqualinkd-docker` with timestamps prepended to all log output
 
-If the EW-11 connection drops, `socat` automatically retries every 5 seconds without requiring a container restart.
+Because the config is rebuilt from the template on every start, runs are deterministic and never accumulate drift. **This means manual edits to `config/aqualinkd.conf` are overwritten on each start — all configuration must go through the HA add-on options UI.**
+
+If the EW-11 connection drops, `socat` automatically retries every 5 seconds without requiring a container restart. A 60-second inactivity timeout (`socat -T 60`) also tears down and reconnects a *half-open* EW-11 session (one where the TCP socket stays up but no RS485 bytes flow), which is the common silent-failure mode for these WiFi serial bridges.
+
+### Pinning the AqualinkD version
+
+The image builds a specific AqualinkD release (default `v3.1.0`) for reproducible builds. To change it, build with `--build-arg AQUALINKD_VERSION=vX.Y.Z`, or set it to `latest` to track the newest upstream release.
+
+### Health
+
+The container ships a Docker `HEALTHCHECK` that verifies **both** the web UI responds and the serial bridge (`/aquadconf/tty.Pool`) exists — so "web up but RS485 dead" is reported as unhealthy, not just a dead web server. Note that Home Assistant's own add-on restart is driven by the `watchdog:` URL in `config.yaml`; the Docker healthcheck is visible via `docker ps` / `docker inspect` and in standalone `docker compose` use.
 
 ---
 
