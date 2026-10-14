@@ -1,9 +1,10 @@
 #####################################
 #
 # Build container
-# The most basic build for aqualinkd 
+# The most basic build for aqualinkd
 #
-# env AQUALINKD_VERSION must be passed to this
+# Build arg AQUALINKD_VERSION selects the upstream release (defaults to a
+# pinned version below; set to "latest" to track newest).
 #
 #####################################
 
@@ -18,10 +19,20 @@ RUN apt-get update && \
 RUN mkdir /home/AqualinkD
 WORKDIR /home/AqualinkD
 
-ARG AQUALINKD_VERSION
-#RUN curl -sL "https://github.com/aqualinkd/AqualinkD/archive/refs/tags/$AQUALINKD_VERSION.tar.gz" | tar xz --strip-components=1
-# Get latest release
-RUN curl -sL $(curl -s https://api.github.com/repos/aqualinkd/AqualinkD/releases/latest | grep "tarball_url" | cut -d'"' -f4) | tar xz --strip-components=1   
+# Pin the AqualinkD source version for reproducible builds.
+# Override at build time with --build-arg AQUALINKD_VERSION=vX.Y.Z,
+# or set to "latest" to track the newest upstream release.
+ARG AQUALINKD_VERSION=v3.1.0
+RUN set -eux; \
+    if [ "$AQUALINKD_VERSION" = "latest" ]; then \
+        url="$(curl -fsSL https://api.github.com/repos/aqualinkd/AqualinkD/releases/latest \
+               | grep '"tarball_url"' | cut -d'"' -f4)"; \
+        [ -n "$url" ] || { echo "ERROR: could not resolve latest release (GitHub API rate limit?)" >&2; exit 1; }; \
+    else \
+        url="https://github.com/aqualinkd/AqualinkD/archive/refs/tags/${AQUALINKD_VERSION}.tar.gz"; \
+    fi; \
+    echo "Fetching AqualinkD from: $url"; \
+    curl -fsSL "$url" | tar xz --strip-components=1
 
 # Build aqualinkd
 RUN make clean && \
@@ -61,12 +72,25 @@ COPY --from=aqualinkd-build /home/AqualinkD/web/ /var/www/aqualinkd/
 RUN mkdir -p /aquadconf
 ADD ./config/aqexec-pre-impl.sh /usr/local/bin/aqexec-pre-impl.sh
 RUN chmod +x /usr/local/bin/aqexec-pre-impl.sh
-ADD ./config/aqualinkd.conf /etc/aqualinkd.conf
 
-#COPY --from=aqualinkd-build /home/AqualinkD/docker/aqualinkd-docker.cmd /usr/local/bin/aqualinkd-docker
-RUN curl -s -o /usr/local/bin/aqualinkd-docker https://raw.githubusercontent.com/aqualinkd/AqualinkD/master/docker/aqualinkd-docker.cmd && \
-    chmod +x /usr/local/bin/aqualinkd-docker
+# Bake the config in two places:
+#  - /etc/aqualinkd.conf           default used by aqualinkd-docker on first boot
+#  - /etc/aqualinkd.conf.template  immutable pristine copy; aqexec-pre regenerates
+#                                  the mounted config from this on every start.
+ADD ./config/aqualinkd.conf /etc/aqualinkd.conf
+ADD ./config/aqualinkd.conf /etc/aqualinkd.conf.template
+
+# Ship our own container start script (single source of truth, no build-time
+# network fetch from upstream master).
+ADD ./config/aqualinkd-docker.cmd /usr/local/bin/aqualinkd-docker
+RUN chmod +x /usr/local/bin/aqualinkd-docker
 
 ADD ./config/aqualinkd-ts.sh /usr/local/bin/aqualinkd-ts
 RUN chmod +x /usr/local/bin/aqualinkd-ts
+
+# Healthcheck: web UI must respond AND the serial bridge (socat PTY) must exist.
+# Catches the "web up but RS485 link dead" failure mode, not just a dead web server.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD curl -fsS http://localhost:80/ >/dev/null 2>&1 && [ -e /aquadconf/tty.Pool ] || exit 1
+
 CMD ["sh", "-c", "/usr/local/bin/aqualinkd-ts"]
