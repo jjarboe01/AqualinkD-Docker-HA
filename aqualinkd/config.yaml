@@ -77,6 +77,9 @@ options:
       light_mode: 2
     - label: "High Speed"
     - label: "NONE"
+    - label: "NONE"
+    - label: "NONE"
+    - label: "Solar Heat"
 
 schema:
   ew11_host: str
