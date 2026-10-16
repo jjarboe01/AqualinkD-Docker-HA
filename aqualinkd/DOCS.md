@@ -9,7 +9,7 @@ All configuration is managed through the HA add-on UI — no manual file editing
 ## Requirements
 
 - Home Assistant OS or Supervised
-- [Hi-Flying EW-11](http://www.hi-flying.com/ew11) (or compatible) WiFi RS485 adapter, configured in TCP server mode
+- [Hi-Flying EW-11](http://www.hi-flying.com/ew11) (or compatible) WiFi RS485 adapter, configured in TCP server mode. **Run EW-11 firmware v1.50.0 or newer for best results** — older firmware has WiFi latency/jitter that causes RS485 read errors (`bad Jandy checksum` / `BAD PACKET` in the log).
 - MQTT broker (e.g., the Mosquitto add-on in HA)
 - Jandy AquaLink RS-485 panel (RS-4, RS-6, RS-8, RS-16, etc.)
 

@@ -27,7 +27,7 @@ See the add-on's [documentation](aqualinkd/DOCS.md) for requirements, configurat
 ## Requirements
 
 - Home Assistant OS or Supervised (the Supervisor builds the add-on locally from its Dockerfile)
-- A [Hi-Flying EW-11](http://www.hi-flying.com/ew11) (or compatible) WiFi RS485 adapter in TCP server mode
+- A [Hi-Flying EW-11](http://www.hi-flying.com/ew11) (or compatible) WiFi RS485 adapter in TCP server mode — **run EW-11 firmware v1.50.0 or newer for best results**; older firmware exhibits WiFi latency/jitter that causes RS485 read errors (bad checksums / dropped packets)
 - An MQTT broker (e.g. the Mosquitto add-on)
 - A Jandy AquaLink RS-485 panel
 
