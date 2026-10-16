@@ -80,6 +80,11 @@ sed -i "s|^rssa_device_id=.*|rssa_device_id=$(str .rssa_device_id)|" "$TMPCONF"
 sed -i "s|^extended_device_id=.*|extended_device_id=$(str .extended_device_id)|" "$TMPCONF"
 sed -i "s|^extended_device_id_programming =.*|extended_device_id_programming = $(yn .extended_device_id_programming)|" "$TMPCONF"
 
+# --- Panel labels: disable so our button labels take effect ---
+# (otherwise AqualinkD pulls aux labels from the control panel and overrides
+#  the button_xx_label values managed via the HA add-on options)
+sed -i "s|^use_panel_aux_labels=.*|use_panel_aux_labels=no|" "$TMPCONF"
+
 # --- Logging ---
 sed -i "s|^log_level=.*|log_level=$(str .log_level)|" "$TMPCONF"
 sed -i "s|^display_warnings_in_web=.*|display_warnings_in_web=$(yn .display_warnings_in_web)|" "$TMPCONF"
