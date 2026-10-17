@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Removed `light_mode` from the default Pool Light button. With a light mode set, AqualinkD programs the light itself, which conflicts with a light the control panel already manages (and can stop the panel's own scheduled light program from running). Only set `light_mode` if the light is *not* configured as a color light in the panel.
+
 ## 3.1.0.2
 
 Repository restructure and reconciliation of on-device edits.

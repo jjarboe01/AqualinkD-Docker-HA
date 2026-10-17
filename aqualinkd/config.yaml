@@ -74,7 +74,6 @@ options:
       pump_id: "0x78"
       pump_index: 1
     - label: "Pool Light"
-      light_mode: 2
     - label: "High Speed"
     - label: "NONE"
     - label: "NONE"
